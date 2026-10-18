@@ -3,187 +3,494 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>徐宇锟 · 个人简历</title>
+  <title>徐宇锟 - Java开发工程师</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
-      background: #0f172a;
-      color: #e2e8f0;
-      display: flex;
-      flex-direction: column;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    /* 顶部栏：固定地址的"门面" */
-    header {
+
+    body {
+      font-family: 'Noto Sans SC', sans-serif;
+      background-color: #f5f7fa;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .resume-container {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+
+    /* Header Section */
+    .header-section {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 40px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .profile-info h1 {
+      font-size: 2.5rem;
+      margin-bottom: 8px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .profile-info p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    .contact-section {
+      text-align: right;
+    }
+
+    .contact-item {
       display: flex;
       align-items: center;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+
+    .contact-icon {
+      width: 24px;
+      height: 24px;
+      margin-right: 12px;
+      fill: white;
+    }
+
+    /* Section Cards */
+    .section-card {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      color: #667eea;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #f0f0f0;
+      display: flex;
+      align-items: center;
+    }
+
+    .section-title::before {
+      content: '';
+      width: 4px;
+      height: 24px;
+      background-color: #667eea;
+      margin-right: 10px;
+      border-radius: 2px;
+    }
+
+    /* Skills Section */
+    .skills-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .skill-tag {
+      background-color: #f0f4ff;
+      color: #667eea;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+
+    .skill-tag:hover {
+      background-color: #667eea;
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    /* Timeline Section */
+    .timeline-item {
+      position: relative;
+      padding-left: 30px;
+      margin-bottom: 25px;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: #667eea;
+    }
+
+    .timeline-item::after {
+      content: '';
+      position: absolute;
+      left: 4px;
+      top: 28px;
+      width: 2px;
+      height: calc(100% - 16px);
+      background-color: #e0e0e0;
+    }
+
+    .timeline-item:last-child::after {
+      display: none;
+    }
+
+    .company-name {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 4px;
+    }
+
+    .job-title-date {
+      display: flex;
       justify-content: space-between;
-      padding: 10px 20px;
-      background: #1e293b;
-      border-bottom: 1px solid #334155;
-      flex-shrink: 0;
+      align-items: center;
+      color: #667eea;
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+      padding-right: 15px;
     }
-    header .brand {
-      font-size: 15px;
-      font-weight: bold;
-      letter-spacing: 1px;
+
+    .job-description {
+      color: #666;
+      line-height: 1.8;
+      white-space: pre-wrap;
     }
-    header .brand span { color: #38bdf8; }
-    header .actions { display: flex; align-items: center; gap: 10px; }
-    #status {
-      font-size: 12px;
-      color: #94a3b8;
-      padding: 3px 10px;
-      border-radius: 999px;
-      background: #0f172a;
-      border: 1px solid #334155;
+
+    /* Project Section */
+    .project-grid {
+      display: grid;
+      gap: 20px;
     }
-    #status.online { color: #4ade80; border-color: #166534; }
-    #status.offline { color: #f87171; border-color: #7f1d1d; }
-    #openBtn {
-      font-size: 12px;
-      color: #e2e8f0;
-      text-decoration: none;
-      padding: 4px 12px;
-      border-radius: 6px;
-      background: #2563eb;
-      border: none;
+
+    .project-card {
+      background-color: #f9fafb;
+      border-radius: 8px;
+      padding: 20px;
+      transition: all 0.3s ease;
       cursor: pointer;
     }
-    #openBtn:hover { background: #1d4ed8; }
-    #openBtn[disabled] { background: #475569; cursor: not-allowed; }
 
-    /* iframe 区域：访客看到的地址栏始终是本页的固定地址 */
-    #view {
-      flex: 1;
-      border: none;
-      width: 100%;
-      background: #ffffff;
+    .project-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
     }
 
-    /* 离线/等待遮罩 */
-    #mask {
-      position: fixed;
-      inset: 0;
-      top: 53px;
-      background: #0f172a;
+    .project-title {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .project-role-date {
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
-      gap: 14px;
-      text-align: center;
-      padding: 20px;
-      z-index: 10;
+      color: #667eea;
+      font-size: 0.9rem;
+      margin-bottom: 12px;
     }
-    #mask.hidden { display: none; }
-    #mask h2 { font-size: 20px; font-weight: 500; }
-    #mask p { font-size: 13px; color: #94a3b8; line-height: 1.8; max-width: 460px; }
-    .spinner {
-      width: 34px; height: 34px;
-      border: 3px solid #334155;
-      border-top-color: #38bdf8;
-      border-radius: 50%;
-      animation: spin 0.9s linear infinite;
+
+    .project-description {
+      color: #666;
+      line-height: 1.8;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Education Section */
+    .education-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+    }
+
+    .school-name {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .education-details {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    /* Personal Advantages */
+    .advantage-item {
+      margin-bottom: 15px;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .advantage-item::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: #667eea;
+      font-weight: bold;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .contact-section {
+        margin-top: 20px;
+        text-align: center;
+      }
+
+      .job-title-date, .project-role-date {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .education-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
   </style>
 </head>
 <body>
-  <header>
-    <div class="brand">徐宇锟 <span>·</span> 个人简历</div>
-    <div class="actions">
-      <span id="status">连接中…</span>
-      <button id="openBtn" disabled>在新标签页打开 ↗</button>
+  <div id="app">
+    <div class="resume-container">
+      <!-- Header Section -->
+      <div class="header-section">
+        <div class="header-content">
+          <div class="profile-info">
+            <h1>{{ profile.name }}</h1>
+            <p>{{ profile.gender }} | {{ profile.age }}岁</p>
+          </div>
+          <div class="contact-section" v-for="contact in contacts" :key="contact.type">
+            <div class="contact-item">
+              <svg class="contact-icon" viewBox="0 0 24 24">
+                <path :d="getContactIcon(contact.type)"/>
+              </svg>
+              {{ contact.value }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Personal Advantages Section -->
+      <div class="section-card">
+        <h2 class="section-title">个人优势</h2>
+        <div v-for="(advantage, index) in profile.advantages" :key="index" class="advantage-item">
+          {{ advantage }}
+        </div>
+      </div>
+
+      <!-- Skills Section -->
+      <div class="section-card">
+        <h2 class="section-title">专业技能</h2>
+        <div class="skills-container">
+          <span v-for="(skill, index) in skills" :key="index" class="skill-tag">
+            {{ skill }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Work Experience Section -->
+      <div class="section-card">
+        <h2 class="section-title">工作经历</h2>
+        <div v-for="(job, index) in experience" :key="index" class="timeline-item">
+          <div class="company-name">{{ job.company }}</div>
+          <div class="job-title-date">
+            <span>{{ job.position }} - {{ job.role }}</span>
+            <span>{{ job.date }}</span>
+          </div>
+          <div class="job-description">{{ job.description }}</div>
+        </div>
+      </div>
+
+      <!-- Project Experience Section -->
+      <div class="section-card">
+        <h2 class="section-title">项目经历</h2>
+        <div class="project-grid">
+          <div v-for="(project, index) in projects" :key="index" class="project-card">
+            <div class="project-title">{{ project.name }}</div>
+            <div class="project-role-date">
+              <span>{{ project.role }}</span>
+              <span>{{ project.date }}</span>
+            </div>
+            <div class="project-description">{{ project.description }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Education Section -->
+      <div class="section-card">
+        <h2 class="section-title">教育经历</h2>
+        <div v-for="(edu, index) in education" :key="index" class="education-item">
+          <div class="school-name">{{ edu.school }}</div>
+          <div class="education-details">
+            <span>{{ edu.degree }} - {{ edu.major }}</span>
+            <span>{{ edu.period }}</span>
+          </div>
+        </div>
+      </div>
+
     </div>
-  </header>
-
-  <iframe id="view" title="简历内容" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
-
-  <div id="mask">
-    <div class="spinner"></div>
-    <h2 id="maskTitle">正在连接简历站点…</h2>
-    <p id="maskText">本页面会自动定位到最新的站点地址，通常几秒内完成，请稍候。</p>
   </div>
 
   <script>
-    // ===== 请修改为你的 GitHub 用户名 / 仓库名 / 分支 =====
-    const CFG = {
-      user: 'nonamesi',
-      repo: 'resume-site',
-      branch: 'main',
-      refreshMs: 20000   // 每 20 秒检测一次地址是否更新
-    };
-    // ==================================================
-
-    const RAW = `https://raw.githubusercontent.com/${CFG.user}/${CFG.repo}/${CFG.branch}/current-url.txt`;
-    const view = document.getElementById('view');
-    const mask = document.getElementById('mask');
-    const maskTitle = document.getElementById('maskTitle');
-    const maskText = document.getElementById('maskText');
-    const status = document.getElementById('status');
-    const openBtn = document.getElementById('openBtn');
-
-    let currentUrl = null;
-
-    function setStatus(text, cls) {
-      status.textContent = text;
-      status.className = cls || '';
-    }
-
-    function showMask(title, text) {
-      maskTitle.textContent = title;
-      maskText.textContent = text;
-      mask.classList.remove('hidden');
-    }
-
-    function hideMask() { mask.classList.add('hidden'); }
-
-    async function fetchTunnelUrl() {
-      // 带时间戳绕过 CDN/浏览器缓存
-      const resp = await fetch(`${RAW}?t=${Date.now()}`, { cache: 'no-store' });
-      if (!resp.ok) throw new Error('HTTP ' + resp.status);
-      const text = (await resp.text()).trim();
-      if (/^https:\/\/[a-z0-9-]+\.trycloudflare\.com/i.test(text)) return text;
-      return null; // offline 或内容无效
-    }
-
-    function applyUrl(url) {
-      currentUrl = url;
-      view.src = url + '/';
-      openBtn.disabled = false;
-      openBtn.onclick = () => window.open(url, '_blank');
-      setStatus('在线', 'online');
-      hideMask();
-    }
-
-    function applyOffline() {
-      currentUrl = null;
-      view.removeAttribute('src');
-      openBtn.disabled = true;
-      setStatus('离线', 'offline');
-      showMask('简历站点当前不在线', '站点主人还没启动服务。请稍后再试，或直接联系他索取最新链接。');
-    }
-
-    async function tick() {
-      try {
-        const url = await fetchTunnelUrl();
-        if (url) {
-          if (url !== currentUrl) applyUrl(url);   // 地址变了才刷新，避免打断阅读
-        } else if (currentUrl !== null || !currentUrl) {
-          applyOffline();
-        }
-      } catch (e) {
-        // 网络抖动时保持现状；若从未连上则继续等待
-        if (currentUrl === null) {
-          setStatus('重试中', '');
+    new Vue({
+      el: '#app',
+      data: {
+        profile: {
+          name: '徐宇锟',
+          gender: '男',
+          age: 27,
+          advantages: [
+            '面对项目挑战，我展现出卓越的问题解决能力，通过深入分析和自主学习，有效应对并克服复杂技术难题，显著提升项目效率。',
+            '在团队合作中，我积极分享专业知识与实践经验，促进团队协同解决关键问题，共同推动项目成功。',
+            '我的学习能力强，能迅速适应并掌握新兴技术，通过实际应用不断精进，为团队引入创新解决方案，增强项目竞争力。'
+          ]
+        },
+        contacts: [
+          { type: 'phone', value: '17674069045' },
+          { type: 'wechat', value: '17674069045' },
+          { type: 'email', value: '404682413@qq.com' }
+        ],
+        skills: [
+          'Java', 'HTML5', 'XML', 'CSS3', 'AJAX', 'JQuery', 'Bootstrap', 
+          'SpringBoot', 'Spring', 'SpringMVC', 'SVN', 'MySQL', 'Shell', 
+          'Socket技术', 'J2EE架构', 'Linux', 'Windows', 'SSM', 
+          'ActiveMQ', 'Maven', 'Eclipse', 'MyEclipse', 'SQL Server', 
+          'Tomcat', 'JavaFX'
+        ],
+        experience: [
+          {
+            company: '广州嘉梓企业管理有限公司',
+            position: '招聘',
+            role: '',
+            date: '2026.02-2026.03',
+            description: '负责招聘工厂与门店员工以及员工业工后续入职的情况跟进'
+          },
+          {
+            company: '超恒投资服务（广州）有限公司',
+            position: '证券交易员',
+            role: '',
+            date: '2023.01-2024.03',
+            description: '负责交易期货为恒生指数，对每天的行情进行判断分析后交易下单'
+          },
+          {
+            company: '上海国经网络科技有限公司',
+            position: '全栈工程师',
+            role: '',
+            date: '2023.04-2023.05',
+            description: '担任角色：全栈开发工程师\n负责工作：以企业微信为载体，使用快速开发平台进行 ERP 系统的前后端开发和实施部署，后端底层编程语言为C#'
+          },
+          {
+            company: '广州飞致创阳有限公司',
+            position: 'Java',
+            role: '',
+            date: '2020.06-2022.04',
+            description: '主要负责固定资产管理后台系统开发、仓库管理系统开发以及巡检管理系统开发,负责编制后台管理系统前后端代码和对接 APP 的接口;有时需对接硬件并需要编写窗口界面软件。该公司后台系统框架主要以前端 layui 框架为主以及后端 spring boot +mybaits puls +shiro 集成框架为主。主要项目模式为定制系统，产品以巡检系统和固定资产管理系统以及仓库生产管理系统为主。'
+          },
+          {
+            company: '长沙千弘通信科技有限公司',
+            position: 'Java',
+            role: '',
+            date: '2019.05-2020.01',
+            description: '我在12个系统联动的中小型企业系统产品的项目中子系统——电商系统中负责开发的小程序以及后台管理系统中相应业务模块功能，并每天进行汇报项目进度进程。也参与过该公司该项目中的OA系统的初期前端模型设计。'
+          }
+        ],
+        projects: [
+          {
+            name: '纺织厂ERP管理系统',
+            role: '全栈工程师',
+            date: '2023.04-2023.05',
+            description: '在纺织厂ERP管理系统项目中，负责设计和实现多个核心功能模块，包括进库管理、出库管理、销售管理和采购管理。项目基于氚云低代码平台构建，采用C#作为主要技术栈，并结合企业微信平台进行部署与实施。通过优化数据处理流程和系统性能，成功降低了甲方在进销存管理方面的成本，实现了其基础功能的高效实现。'
+          },
+          {
+            name: '固定资产管理系统',
+            role: '全栈工程师',
+            date: '2021.04-2022.04',
+            description: '参与项目：学校固定资产管理系统、贪玩固定资产管理系统、山西监督局固定资产管理系统。个人职责：本人在这些项目中负责后台管理系统的业务功能逻辑代码编写、后台管理web端代码编写、测试与运维、JAVA GUI编写以及安卓接口编写。 项目结构：该项目主要为后台Web管理系统加安卓APP端构成；山西监督局固定资产系统特别增加了通道门，以及打印机操作的GUI界面，该系统通过使用RFID标签的方式对固定资产出入库进行识别管理，也更加便于管理人员管控资产的流向情况；贪玩固定资产管理系统对贪玩公司旗下多子公司多部门的情况进行了多层级化管理，旨在解决其各部门之间资产经常出现混淆情况不便于人员管理其资产情况的问题;后台框架为:springboots+mybaitsplus为主,web前端为:layui框架;代码管理为svn;GUI框架为JavaFx，测试工具为postman。'
+          },
+          {
+            name: '星城家具生产管理系统',
+            role: '全栈工程师',
+            date: '2021.03-2022.03',
+            description: '该系统分为三期开发；主要是对生产物件从客户下单，到生产过程和追溯进行管理的系统，其中过程主要以 PDA 扫码和 RFID 去进行记录数据并传送到后台。1. 后台系统结构为前后端不分离；后端技术框架主要 springboot+mybaitsplusuls 组成，其中拦截器为 shiro ；前端框架为 layui 框架为主；数据库为 MySQL 数据库。\n2. 在该系统的开发中我主要负责数据库的设计，后台系统的搭建及开发，以及 PDA 端的功能接口开发。'
+          },
+          {
+            name: '江西电建巡检管理系统',
+            role: '全栈、测试及运维工程师',
+            date: '2020.06-2021.12',
+            description: '1、该项目其业务是为了使用RFID标签便化巡检工作人员的巡检流程以及多个电站设备情况的巡检管理。\n2、该项目技术方面主要为Java+mybaits puls+layui前端框架+安卓扫码机+MySQL多数据库的技术+ActivMQ消息队列组成；测试工具为postman和JMeter。\n3、我主要负责工作内容为系统功能测试及编写测试报告以及后续系统数据库运维，以及系统bug修复和后续功能的优化与增加的开发。'
+          },
+          {
+            name: '飞阳crm系统',
+            role: '全栈工程师',
+            date: '2020.06-2020.08',
+            description: '个人职责：本人在这个项目中负责CRM系统的功能bug优化，以及整个系统的老旧框架更新新功能搬运。该项目主要功能为：客户管理，人员管理，合同管理，器材管理，项目管理；后端框架为：Springboots + mybaitsplus为主；前端老框架为Bootstrap框架，新框架为Layui框架；项目代码管理为svn。'
+          },
+          {
+            name: '臻选电商平台系统',
+            role: 'Java开发工程师',
+            date: '2019.11-2020.01',
+            description: '该项目是为了满足电商用户需求打造的一款软件。该系统降低了电商用户管理成本，使得管理更加便捷化，不论是个体还是开展电商业务的公司都能更易上手使用该系统。\n\n该项目主要功能模块分为：产品管理、客户管理、订单管理、用户管理、购物车管理、登录注册。系统采用前后端分离结构，后端主要使用Spring、Spring MVC、Spring Boot框架、Mybatis框架、MySQL数据库、maven管理架包、Git管理代码；后台管理前端则使用layui框架、HTML5+CSS3，ajax技术连接据、Git管理代码；客户界面则使用微信小程序框架、Git管理代码。\n\n个人职责：客户信息模块、购物车功能、商品规格功能、日志功能。'
+          },
+          {
+            name: '实慧进销存系统',
+            role: 'java开发工程师',
+            date: '2019.06-2019.09',
+            description: '为满足仓库管理的需求所定制的一款软件。该系统便捷化仓库管理，对仓库流动信息更加一目了然，能够更好的管理仓库产品的信息，同时也降低了仓库管理的人力成本和时间成本。\n\n该项目的主要功能模块分为：进库管理、出库管理、销货管理、客户管理、管理员管理；系统采用前后端分离结构，后端使用Spring Boot框架、Spring、SpringMVC、Mybaits连接MySQL数据库、maven管理架包、Git管理代码。前端页面则使用HTML5+CSS3+jQuery框架，jax连接后台数据、Git管理代码。\n\n个人职责：本人在这次项目中负责了编写进库管理、出库管理、管理员管理'
+          },
+          {
+            name: '通达OA系统',
+            role: 'Java开发工程师',
+            date: '2019.04-2019.05',
+            description: '为满足公司管理的需求所定制的一款软件。该系统在管理效率上使公司管理更为便捷化，简化了工作管理方面的审批流程。\n\n该项目主要功能模块分为：OA系统工作流、个人办公功能；系统采用前后端分离结构，后端主要技术：Spring、Spring MVC、Spring Boot框架、Mybatis框架连接MySQL、maven管理架包、Git管理代码；前端则使用layui框架、HTML5+CSS3+jQuery框架、使用ajax连接、Git管理代码。\n\n个人职责：本人在这次项目中负责前端页面的编写，负责功能页面有：在线用户页面、系统日志页面、权限管理页面。'
+          }
+        ],
+        education: [
+          {
+            school: '中南林业科技大学',
+            degree: '大专',
+            major: '软件工程',
+            period: '2017-2020'
+          }
+        ]
+      },
+      methods: {
+        getContactIcon(type) {
+          switch (type) {
+            case 'phone':
+              return 'M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.54-.36.81-.27.27-.09.54-.09.81 0 .27.09.54.18.81.27l2.2 2.2c2.83-1.44 5.14-3.76 6.59-6.59l-2.2-2.2c-.27-.27-.54-.36-.81-.27-.27-.09-.54-.09-.81 0-.27.09-.54.18-.81.27l-2.2 2.2c-2.83-1.44-5.14-3.76-6.59-6.59l-2.2-2.2z';
+            case 'wechat':
+              return 'M9 2C4.58 2 1 5.09 1 9c0 2.38 1.19 4.47 3.06 5.88l-.67 2.83c-.11.46.39.78.78.52l2.2-1.42c.34-.02.68-.04 1.06-.04h.1c.38 0 .72.02 1.06.04l2.2 1.42c.39.26.89-.06.78-.52l-.67-2.83C16.81 13.47 18 11.38 18 9c0-3.91-3.58-7-9-7zm0 12c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z';
+            case 'email':
+              return 'M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z';
+            default:
+              return '';
+          }
         }
       }
-    }
-
-    tick();
-    setInterval(tick, CFG.refreshMs);
+    })
   </script>
 </body>
 </html>
