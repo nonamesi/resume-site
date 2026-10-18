@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>徐宇锟 · 个人简历</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      display: flex;
+      flex-direction: column;
+    }
+    /* 顶部栏：固定地址的"门面" */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      background: #1e293b;
+      border-bottom: 1px solid #334155;
+      flex-shrink: 0;
+    }
+    header .brand {
+      font-size: 15px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    header .brand span { color: #38bdf8; }
+    header .actions { display: flex; align-items: center; gap: 10px; }
+    #status {
+      font-size: 12px;
+      color: #94a3b8;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: #0f172a;
+      border: 1px solid #334155;
+    }
+    #status.online { color: #4ade80; border-color: #166534; }
+    #status.offline { color: #f87171; border-color: #7f1d1d; }
+    #openBtn {
+      font-size: 12px;
+      color: #e2e8f0;
+      text-decoration: none;
+      padding: 4px 12px;
+      border-radius: 6px;
+      background: #2563eb;
+      border: none;
+      cursor: pointer;
+    }
+    #openBtn:hover { background: #1d4ed8; }
+    #openBtn[disabled] { background: #475569; cursor: not-allowed; }
+
+    /* iframe 区域：访客看到的地址栏始终是本页的固定地址 */
+    #view {
+      flex: 1;
+      border: none;
+      width: 100%;
+      background: #ffffff;
+    }
+
+    /* 离线/等待遮罩 */
+    #mask {
+      position: fixed;
+      inset: 0;
+      top: 53px;
+      background: #0f172a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      text-align: center;
+      padding: 20px;
+      z-index: 10;
+    }
+    #mask.hidden { display: none; }
+    #mask h2 { font-size: 20px; font-weight: 500; }
+    #mask p { font-size: 13px; color: #94a3b8; line-height: 1.8; max-width: 460px; }
+    .spinner {
+      width: 34px; height: 34px;
+      border: 3px solid #334155;
+      border-top-color: #38bdf8;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">徐宇锟 <span>·</span> 个人简历</div>
+    <div class="actions">
+      <span id="status">连接中…</span>
+      <button id="openBtn" disabled>在新标签页打开 ↗</button>
+    </div>
+  </header>
+
+  <iframe id="view" title="简历内容" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+
+  <div id="mask">
+    <div class="spinner"></div>
+    <h2 id="maskTitle">正在连接简历站点…</h2>
+    <p id="maskText">本页面会自动定位到最新的站点地址，通常几秒内完成，请稍候。</p>
+  </div>
+
+  <script>
+    // ===== 请修改为你的 GitHub 用户名 / 仓库名 / 分支 =====
+    const CFG = {
+      user: 'nonamesi',
+      repo: 'resume-site',
+      branch: 'main',
+      refreshMs: 20000   // 每 20 秒检测一次地址是否更新
+    };
+    // ==================================================
+
+    const RAW = `https://raw.githubusercontent.com/${CFG.user}/${CFG.repo}/${CFG.branch}/current-url.txt`;
+    const view = document.getElementById('view');
+    const mask = document.getElementById('mask');
+    const maskTitle = document.getElementById('maskTitle');
+    const maskText = document.getElementById('maskText');
+    const status = document.getElementById('status');
+    const openBtn = document.getElementById('openBtn');
+
+    let currentUrl = null;
+
+    function setStatus(text, cls) {
+      status.textContent = text;
+      status.className = cls || '';
+    }
+
+    function showMask(title, text) {
+      maskTitle.textContent = title;
+      maskText.textContent = text;
+      mask.classList.remove('hidden');
+    }
+
+    function hideMask() { mask.classList.add('hidden'); }
+
+    async function fetchTunnelUrl() {
+      // 带时间戳绕过 CDN/浏览器缓存
+      const resp = await fetch(`${RAW}?t=${Date.now()}`, { cache: 'no-store' });
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      const text = (await resp.text()).trim();
+      if (/^https:\/\/[a-z0-9-]+\.trycloudflare\.com/i.test(text)) return text;
+      return null; // offline 或内容无效
+    }
+
+    function applyUrl(url) {
+      currentUrl = url;
+      view.src = url + '/';
+      openBtn.disabled = false;
+      openBtn.onclick = () => window.open(url, '_blank');
+      setStatus('在线', 'online');
+      hideMask();
+    }
+
+    function applyOffline() {
+      currentUrl = null;
+      view.removeAttribute('src');
+      openBtn.disabled = true;
+      setStatus('离线', 'offline');
+      showMask('简历站点当前不在线', '站点主人还没启动服务。请稍后再试，或直接联系他索取最新链接。');
+    }
+
+    async function tick() {
+      try {
+        const url = await fetchTunnelUrl();
+        if (url) {
+          if (url !== currentUrl) applyUrl(url);   // 地址变了才刷新，避免打断阅读
+        } else if (currentUrl !== null || !currentUrl) {
+          applyOffline();
+        }
+      } catch (e) {
+        // 网络抖动时保持现状；若从未连上则继续等待
+        if (currentUrl === null) {
+          setStatus('重试中', '');
+        }
+      }
+    }
+
+    tick();
+    setInterval(tick, CFG.refreshMs);
+  </script>
+</body>
+</html>
